@@ -22,8 +22,7 @@ dependencies:
   flutter_bloc: ^0.14.0
   equatable: ^0.2.0
   meta: ^1.1.6
-  user_repository:
-      path: user_repository
+  http: ^0.12.0+2
 
 dev_dependencies:
   flutter_test:
