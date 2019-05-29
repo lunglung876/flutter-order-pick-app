@@ -1,14 +1,12 @@
-import 'package:flutter/material.dart';
-
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:warehouse_order_pick/user_repository.dart';
-
 import 'package:warehouse_order_pick/authentication/authentication.dart';
-import 'package:warehouse_order_pick/splash/splash.dart';
-import 'package:warehouse_order_pick/login/login.dart';
-import 'package:warehouse_order_pick/home/home.dart';
 import 'package:warehouse_order_pick/common/common.dart';
+import 'package:warehouse_order_pick/home/home.dart';
+import 'package:warehouse_order_pick/login/login.dart';
+import 'package:warehouse_order_pick/splash/splash.dart';
+import 'package:warehouse_order_pick/user_repository.dart';
 
 class SimpleBlocDelegate extends BlocDelegate {
   @override
@@ -34,6 +32,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   AuthenticationBloc authenticationBloc;
+  HomeBloc homeBloc;
   UserRepository get userRepository => widget.userRepository;
 
   @override

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
 
 import 'package:warehouse_order_pick/models/item.dart';
@@ -21,9 +22,10 @@ class Api {
   }) async {
     final uri = Uri.https(host, endpoints['login']);
     var request = new http.MultipartRequest("POST", uri);
+    var json = jsonDecode(await rootBundle.loadString('assets/dev.json'));
     request.headers.addAll({'Accept': 'application/json'});
-    request.fields['_username'] = '';
-    request.fields['_password'] = '';
+    request.fields['_username'] = json['username'];
+    request.fields['_password'] = json['password'];
 
     var response = await request.send();
     final body = jsonDecode(await response.stream.bytesToString());

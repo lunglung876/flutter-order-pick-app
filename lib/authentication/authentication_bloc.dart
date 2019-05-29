@@ -1,13 +1,12 @@
 import 'dart:async';
 
-import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
-
-import 'package:warehouse_order_pick/user_repository.dart';
+import 'package:meta/meta.dart';
 import 'package:warehouse_order_pick/authentication/authentication.dart';
-import 'package:warehouse_order_pick/api/api.dart';
+import 'package:warehouse_order_pick/user_repository.dart';
 
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc
+    extends Bloc<AuthenticationEvent, AuthenticationState> {
   final UserRepository userRepository;
 
   AuthenticationBloc({@required this.userRepository})
@@ -18,8 +17,8 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   @override
   Stream<AuthenticationState> mapEventToState(
-      AuthenticationEvent event,
-      ) async* {
+    AuthenticationEvent event,
+  ) async* {
     if (event is AppStarted) {
       final bool hasToken = await userRepository.hasToken();
 

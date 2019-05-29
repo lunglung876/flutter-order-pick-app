@@ -1,0 +1,4 @@
+analyzer:
+  exclude:
+    - lib/home/**
+    - lib/home/home.dart
