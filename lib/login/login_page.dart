@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:warehouse_order_pick/user_repository.dart';
 
+import 'package:warehouse_order_pick/user_repository.dart';
 import 'package:warehouse_order_pick/authentication/authentication.dart';
 import 'package:warehouse_order_pick/login/login.dart';
 
@@ -20,7 +19,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   LoginBloc _loginBloc;
   AuthenticationBloc _authenticationBloc;
-
   UserRepository get _userRepository => widget.userRepository;
 
   @override

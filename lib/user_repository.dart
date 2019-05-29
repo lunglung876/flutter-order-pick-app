@@ -1,38 +1,32 @@
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class UserRepository {
-  Future<String> login({
-    @required String username,
-    @required String password,
-  }) async {
-    final uri = Uri.parse('https://hbx.com/login_check');
-    var request = new http.MultipartRequest("POST", uri);
-    request.headers.addAll({"Accept": "application/json"});
-    request.fields['_username'] = '';
-    request.fields['_password'] = '';
-    var response = await request.send();
-    if (response.statusCode == 200) print('Uploaded!');
-    debugPrint(await response.stream.bytesToString());
+  static FlutterSecureStorage storage;
+  static const tokenStorageKey = 'jwtToken';
 
-    return 'token';
+  UserRepository() {
+    storage = new FlutterSecureStorage();
   }
 
   Future<void> deleteToken() async {
-    /// delete from keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
+    await storage.delete(key: tokenStorageKey);
+
     return;
   }
 
   Future<void> persistToken(String token) async {
-    /// write to keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
+    await storage.write(key: tokenStorageKey, value: token);
+
     return;
   }
 
+  Future<String> getToken() async {
+    return await storage.read(key: tokenStorageKey);
+  }
+
   Future<bool> hasToken() async {
-    /// read from keystore/keychain
-    await Future.delayed(Duration(seconds: 1));
-    return false;
+    var token = await storage.read(key: tokenStorageKey);
+
+    return token != null;
   }
 }
