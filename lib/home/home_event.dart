@@ -23,3 +23,13 @@ class KeyPressed extends HomeEvent {
   @override
   String toString() => 'Key Pressed';
 }
+
+class LoadOrders extends HomeEvent {
+  @override
+  String toString() => 'Load Orders';
+}
+
+class DisplayedError extends HomeEvent {
+  @override
+  String toString() => 'Displayed Error';
+}

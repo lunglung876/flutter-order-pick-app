@@ -10,13 +10,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   HomeBloc homeBloc;
-//  BarcodeScannerBloc barcodeScannerBloc;
 
   @override
   void initState() {
     homeBloc = HomeBloc();
-//    barcodeScannerBloc = BarcodeScannerBloc(homeBloc: homeBloc);
-//    barcodeScannerBloc = BarcodeScannerBloc(homeBloc: homeBloc);
     super.initState();
   }
 
@@ -24,8 +21,28 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     FocusNode _textNode = new FocusNode();
 
-    return BlocProvider<HomeBloc>(
+    return BlocListener(
       bloc: homeBloc,
+      listener: (BuildContext context, HomeState state) {
+        if (state.error != '') {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: Text(state.error),
+                actions: <Widget>[
+                  new FlatButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: Text('Close'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+
+        homeBloc.dispatch(DisplayedError());
+      },
       child: Scaffold(
         appBar: AppBar(
           title: Text('Home'),
@@ -41,11 +58,23 @@ class _HomePageState extends State<HomePage> {
               child: Builder(
                 builder: (BuildContext context) {
                   FocusScope.of(context).requestFocus(_textNode);
-                  return ListView.builder(
-                    itemCount: state.orderNumbers.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return _buildRow(state.orderNumbers[index]);
-                    },
+                  return Container(
+                    child: Column(
+                      children: <Widget>[
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: state.orderNumbers.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return _buildRow(state.orderNumbers[index]);
+                          },
+                        ),
+                        RaisedButton(
+                          onPressed: () => homeBloc.dispatch(LoadOrders()),
+                          child: Text('Next'),
+                        )
+                      ],
+                    ),
                   );
                 },
               ),
@@ -57,14 +86,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRow(orderNumber) {
-    debugPrint(orderNumber);
     return new ListTile(title: new Text(orderNumber));
   }
 
   @override
   void dispose() {
     homeBloc.dispose();
-//    barcodeScannerBloc.dispose();
     super.dispose();
   }
 }

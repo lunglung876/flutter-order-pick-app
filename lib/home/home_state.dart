@@ -1,24 +1,22 @@
 import 'package:equatable/equatable.dart';
+import 'package:warehouse_order_pick/models/item.dart';
 
-abstract class HomeState extends Equatable {
+class HomeState extends Equatable {
   String inputBuffer;
   List<String> orderNumbers;
+  bool loading;
+  List<Item> items;
+  String error;
 
-  HomeState([List props = const []]) : super(props);
-}
+  HomeState(
+      this.inputBuffer, this.orderNumbers, this.loading, this.items, this.error)
+      : super([inputBuffer, orderNumbers, loading, items, error]);
 
-class HomeInitState extends HomeState {
-  final String inputBuffer = '';
-  final List<String> orderNumbers = [];
-}
-
-class HomeInputState extends HomeState {
-  final String inputBuffer;
-  final List<String> orderNumbers;
-
-  HomeInputState({this.inputBuffer, this.orderNumbers})
-      : super([inputBuffer, orderNumbers]);
-
-  @override
-  String toString() => 'Buffer: $inputBuffer, Numbers: $orderNumbers';
+  HomeState.initial() {
+    this.inputBuffer = '';
+    this.orderNumbers = [];
+    this.loading = false;
+    this.items = [];
+    this.error = '';
+  }
 }

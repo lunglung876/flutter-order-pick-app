@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
-
 import 'package:warehouse_order_pick/models/item.dart';
 import 'package:warehouse_order_pick/user_repository.dart';
 
@@ -35,7 +34,8 @@ class Api {
 
   Future<List<Item>> getItems(List<String> orderNumbers) async {
     var items = <Item>[];
-    final uri = new Uri.https(host, endpoints['getOrders'], {'orders': orderNumbers.join(',')});
+    final uri = new Uri.https(
+        host, endpoints['getOrders'], {'orders': orderNumbers.join(',')});
     var response = await http.get(uri, headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
@@ -43,6 +43,11 @@ class Api {
     });
 
     final body = jsonDecode(response.body);
+
+    if (response.statusCode != 200) {
+      throw Exception(body['message']);
+    }
+
     final orders = body['orders'];
 
     orders.forEach((order) {
