@@ -33,3 +33,12 @@ class DisplayedError extends HomeEvent {
   @override
   String toString() => 'Displayed Error';
 }
+
+class RemoveOrder extends HomeEvent {
+  final String orderNumber;
+
+  RemoveOrder({@required this.orderNumber}) : super([orderNumber]);
+
+  @override
+  String toString() => 'Remove order { number: $orderNumber }';
+}

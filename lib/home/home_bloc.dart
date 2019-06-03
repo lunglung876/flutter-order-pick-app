@@ -22,7 +22,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       if (keyEvent is RawKeyDownEvent) {
         final key = handleKey(keyEvent.data);
         if (key == 'enter') {
-          var orderNumbers = currentState.orderNumbers;
+          var orderNumbers = List<String>.from(currentState.orderNumbers);
           var buffer = currentState.inputBuffer;
 
           if (buffer != '' && !orderNumbers.contains(buffer)) {
@@ -51,6 +51,13 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     if (event is DisplayedError) {
       yield updateState(error: '');
+    }
+
+    if (event is RemoveOrder) {
+      var orderNumbers = List<String>.from(currentState.orderNumbers);
+      orderNumbers.remove(event.orderNumber);
+
+      yield updateState(orderNumbers: orderNumbers);
     }
   }
 

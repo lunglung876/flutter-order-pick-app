@@ -58,24 +58,32 @@ class _HomePageState extends State<HomePage> {
               child: Builder(
                 builder: (BuildContext context) {
                   FocusScope.of(context).requestFocus(_textNode);
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: state.orderNumbers.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _buildRow(state.orderNumbers[index]);
-                          },
-                        ),
-                        RaisedButton(
-                          onPressed: () => homeBloc.dispatch(LoadOrders()),
-                          child: Text('Next'),
-                        )
-                      ],
-                    ),
-                  );
+                  if (state.orderNumbers.length > 0) {
+                    return Container(
+                      child: Column(
+                        children: <Widget>[
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            shrinkWrap: true,
+                            itemCount: state.orderNumbers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return _buildRow(state.orderNumbers[index]);
+                            },
+                          ),
+                          RaisedButton(
+                            onPressed: () => homeBloc.dispatch(LoadOrders()),
+                            child: Text('Next'),
+                            textColor: Colors.white,
+                            color: Colors.green,
+                          )
+                        ],
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      child: Text('Please scan orders to get started.'),
+                    );
+                  }
                 },
               ),
             );
@@ -86,7 +94,15 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRow(orderNumber) {
-    return new ListTile(title: new Text(orderNumber));
+    return new ListTile(
+      title: new Text(orderNumber),
+      trailing: RaisedButton(
+        onPressed: () => homeBloc.dispatch(RemoveOrder(orderNumber: orderNumber)),
+        child: Text('Remove'),
+        textColor: Colors.white,
+        color: Colors.redAccent,
+      ),
+    );
   }
 
   @override
