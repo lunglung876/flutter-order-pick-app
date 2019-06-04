@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'home.dart';
+import 'package:warehouse_order_pick/barcode_scanner/barcode_scanner_event.dart';
+import 'package:warehouse_order_pick/orders/orders.dart';
+import 'package:warehouse_order_pick/items/items.dart';
+import 'package:warehouse_order_pick/pick/pick.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -9,11 +13,15 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  HomeBloc homeBloc;
+  OrdersBloc ordersBloc;
+  HomeBarcodeScannerBloc barcodeScannerBloc;
+  ItemsBloc itemsBloc;
 
   @override
   void initState() {
-    homeBloc = HomeBloc();
+    ordersBloc = OrdersBloc();
+    barcodeScannerBloc = HomeBarcodeScannerBloc(ordersBloc);
+    itemsBloc = ItemsBloc();
     super.initState();
   }
 
@@ -22,9 +30,9 @@ class _HomePageState extends State<HomePage> {
     FocusNode _textNode = new FocusNode();
 
     return BlocListener(
-      bloc: homeBloc,
-      listener: (BuildContext context, HomeState state) {
-        if (state.error != '') {
+      bloc: itemsBloc,
+      listener: (BuildContext context, ItemsState state) {
+        if (state is ItemsError) {
           showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -41,53 +49,65 @@ class _HomePageState extends State<HomePage> {
           );
         }
 
-        homeBloc.dispatch(DisplayedError());
+        if (state is ItemsLoaded) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => PickPage(items: state.items)),
+          );
+        }
       },
       child: Scaffold(
         appBar: AppBar(
           title: Text('Home'),
         ),
-        body: BlocBuilder<HomeEvent, HomeState>(
-          bloc: homeBloc,
-          builder: (BuildContext context, HomeState state) {
-            return new RawKeyboardListener(
+        body: Column(
+          children: <Widget>[
+            RawKeyboardListener(
               focusNode: _textNode,
               onKey: (keyEvent) {
-                homeBloc.dispatch(KeyPressed(keyEvent: keyEvent));
+                barcodeScannerBloc.dispatch(BarcodeScannerKeyPressed(keyEvent: keyEvent));
               },
               child: Builder(
-                builder: (BuildContext context) {
-                  FocusScope.of(context).requestFocus(_textNode);
-                  if (state.orderNumbers.length > 0) {
-                    return Container(
-                      child: Column(
-                        children: <Widget>[
-                          ListView.builder(
-                            scrollDirection: Axis.vertical,
-                            shrinkWrap: true,
-                            itemCount: state.orderNumbers.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return _buildRow(state.orderNumbers[index]);
-                            },
-                          ),
-                          RaisedButton(
-                            onPressed: () => homeBloc.dispatch(LoadOrders()),
-                            child: Text('Next'),
-                            textColor: Colors.white,
-                            color: Colors.green,
-                          )
-                        ],
-                      ),
-                    );
-                  } else {
-                    return Container(
-                      child: Text('Please scan orders to get started.'),
-                    );
+                  builder: (BuildContext context) {
+                    FocusScope.of(context).requestFocus(_textNode);
+
+                    return TextField();
                   }
-                },
               ),
-            );
-          },
+            ),
+            BlocBuilder<OrdersEvent, List<String>>(
+              bloc: ordersBloc,
+              builder: (BuildContext context, List<String> ordersState) {
+                FocusScope.of(context).requestFocus(_textNode);
+                if (ordersState.length > 0) {
+                  return Container(
+                    child: Column(
+                      children: <Widget>[
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: ordersState.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return _buildRow(ordersState[index]);
+                          },
+                        ),
+                        RaisedButton(
+                          onPressed: () => itemsBloc.dispatch(LoadOrderButtonPressed(ordersState)),
+                          child: Text('Next'),
+                          textColor: Colors.white,
+                          color: Colors.green,
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  return Container(
+                    child: Text('Please scan orders to get started.'),
+                  );
+                }
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -97,7 +117,8 @@ class _HomePageState extends State<HomePage> {
     return new ListTile(
       title: new Text(orderNumber),
       trailing: RaisedButton(
-        onPressed: () => homeBloc.dispatch(RemoveOrder(orderNumber: orderNumber)),
+        onPressed: () =>
+            ordersBloc.dispatch(RemoveOrderButtonPressed(number: orderNumber)),
         child: Text('Remove'),
         textColor: Colors.white,
         color: Colors.redAccent,
@@ -107,7 +128,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
-    homeBloc.dispose();
+    barcodeScannerBloc.dispose();
+    ordersBloc.dispose();
     super.dispose();
   }
 }

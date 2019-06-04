@@ -23,7 +23,7 @@ class Item {
       id: variant['id'],
       quantity: json['quantity'],
       sku: variant['sku'],
-      brand: variant['_embedded']['brand'],
+      brand: variant['_embedded']['brand_name'],
       name: variant['_embedded']['product_name'],
       size: variant['_embedded']['size'],
       image: variant['object']['images'][0]['_links']['small']['href'],

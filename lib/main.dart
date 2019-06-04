@@ -32,7 +32,6 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   AuthenticationBloc authenticationBloc;
-  HomeBloc homeBloc;
   UserRepository get userRepository => widget.userRepository;
 
   @override
