@@ -52,7 +52,8 @@ class _HomePageState extends State<HomePage> {
         if (state is ItemsLoaded) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => PickPage(items: state.items)),
+            MaterialPageRoute(
+                builder: (context) => PickPage(items: state.items)),
           );
         }
       },
@@ -65,40 +66,54 @@ class _HomePageState extends State<HomePage> {
             RawKeyboardListener(
               focusNode: _textNode,
               onKey: (keyEvent) {
-                barcodeScannerBloc.dispatch(BarcodeScannerKeyPressed(keyEvent: keyEvent));
+                barcodeScannerBloc
+                    .dispatch(BarcodeScannerKeyPressed(keyEvent: keyEvent));
               },
-              child: Builder(
-                  builder: (BuildContext context) {
-                    FocusScope.of(context).requestFocus(_textNode);
+              child: Builder(builder: (BuildContext context) {
+                FocusScope.of(context).requestFocus(_textNode);
 
-                    return TextField();
-                  }
-              ),
+                return TextField();
+              }),
             ),
             BlocBuilder<OrdersEvent, List<String>>(
               bloc: ordersBloc,
               builder: (BuildContext context, List<String> ordersState) {
                 FocusScope.of(context).requestFocus(_textNode);
                 if (ordersState.length > 0) {
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        ListView.builder(
-                          scrollDirection: Axis.vertical,
-                          shrinkWrap: true,
-                          itemCount: ordersState.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return _buildRow(ordersState[index]);
-                          },
+                  return BlocBuilder<ItemsEvent, ItemsState>(
+                    bloc: itemsBloc,
+                    builder: (BuildContext context, ItemsState itemsState) {
+                      return Container(
+                        child: Column(
+                          children: <Widget>[
+                            ListView.builder(
+                              scrollDirection: Axis.vertical,
+                              shrinkWrap: true,
+                              itemCount: ordersState.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return _buildRow(ordersState[index]);
+                              },
+                            ),
+                            RaisedButton(
+                              onPressed: () {
+                                if (itemsState is! ItemsLoading) {
+                                  itemsBloc.dispatch(
+                                      LoadOrderButtonPressed(ordersState));
+                                }
+                              },
+                              child: Text('Next'),
+                              textColor: Colors.white,
+                              color: Colors.green,
+                            ),
+                            Container(
+                              child: itemsState is ItemsLoading
+                                  ? CircularProgressIndicator()
+                                  : null,
+                            ),
+                          ],
                         ),
-                        RaisedButton(
-                          onPressed: () => itemsBloc.dispatch(LoadOrderButtonPressed(ordersState)),
-                          child: Text('Next'),
-                          textColor: Colors.white,
-                          color: Colors.green,
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   );
                 } else {
                   return Container(
