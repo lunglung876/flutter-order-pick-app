@@ -6,4 +6,15 @@ class PickState extends Equatable {
   final String error;
 
   PickState(this.items, this.error) : super([items, error]);
+
+  @override
+  String toString() {
+    String result = '';
+
+    this.items.forEach((item) {
+      result += item.quantityScanned.toString() + ',';
+    });
+
+    return result;
+  }
 }

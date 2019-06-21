@@ -9,46 +9,52 @@ class ItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Image.network(
-              item.image,
-              width: 150,
+    return Container(
+      decoration: BoxDecoration(
+          color: item.quantity == item.quantityScanned
+              ? Colors.green
+              : Colors.red),
+      child: Padding(
+        padding: const EdgeInsets.all(15),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Image.network(
+                item.image,
+                width: 150,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(item.brand),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text(item.name),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text('Size: ${item.size}'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text('SKU: ${item.sku}'),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 10.0),
-            child: Text('Location: ${item.shelf}-${item.box}'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text('Quantity: ${item.quantity}'),
-              Text('Quantity Scanned: ${item.quantityScanned}'),
-            ],
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text(item.brand),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text(item.name),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text('Size: ${item.size}'),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text('SKU: ${item.sku}'),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: Text('Location: ${item.shelf}-${item.box}'),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Quantity: ${item.quantity}'),
+                Text('Quantity Scanned: ${item.quantityScanned}'),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

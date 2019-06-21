@@ -17,18 +17,27 @@ class PickBloc extends Bloc<PickEvent, PickState> {
   @override
   Stream<PickState> mapEventToState(PickEvent event) async* {
     if (event is HandleInput) {
-      var items = List<Item>.from(currentState.items);
+      var item = currentState.items.firstWhere(
+          (item) =>
+              item.sku == event.sku && item.quantity != item.quantityScanned,
+          orElse: () => null);
 
-        var item = items.firstWhere((item) => item.sku == event.sku && item.quantity != item.quantityScanned, orElse: () => null);
+      if (item != null) {
+        List<Item> items = [];
 
-        if (item != null) {
-          item.quantityScanned ++;
+        currentState.items.forEach((item) {
+          int quantity =
+              item.sku == event.sku && item.quantity != item.quantityScanned
+                  ? 1
+                  : 0;
+          items.add(Item.incrementQuantity(item, quantity));
+        });
 
-          yield PickState(items, '');
-        } else {
-          yield PickState(items, 'Invalid SKU: ${event.sku}');
-          yield PickState(items, '');
-        }
+        yield PickState(items, '');
+      } else {
+        yield PickState(items, 'Invalid SKU: ${event.sku}');
+        yield PickState(items, '');
+      }
     }
   }
 }

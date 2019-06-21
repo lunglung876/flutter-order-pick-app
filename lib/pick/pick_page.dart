@@ -78,13 +78,15 @@ class _PickPageState extends State<PickPage> {
 
                 return Expanded(
                   child: ListView.separated(
-                    padding: EdgeInsets.symmetric(vertical: 15),
                     itemCount: pickState.items.length,
                     itemBuilder: (BuildContext context, int index) {
                       return ItemWidget(item: pickState.items[index]);
                     },
                     separatorBuilder: (context, index) {
-                      return Divider(height: 30);
+                      return Divider(
+                        height: 0,
+                        color: Colors.black87,
+                      );
                     },
                   ),
                 );
