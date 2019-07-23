@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:meta/meta.dart';
 import 'package:bloc/bloc.dart';
 import 'package:warehouse_order_pick/user_repository.dart';
-import 'package:warehouse_order_pick/api/api.dart';
+import 'package:warehouse_order_pick/api/mock_api.dart';
 import 'package:warehouse_order_pick/authentication/authentication.dart';
 import 'package:warehouse_order_pick/login/login.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final UserRepository userRepository;
   final AuthenticationBloc authenticationBloc;
-  final Api api = new Api();
+  final MockApi api = new MockApi();
 
   LoginBloc({
     @required this.userRepository,

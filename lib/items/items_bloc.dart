@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:warehouse_order_pick/api/api.dart';
+import 'package:warehouse_order_pick/api/mock_api.dart';
 
 import 'items.dart';
 
 class ItemsBloc extends Bloc<ItemsEvent, ItemsState> {
-  final api = Api();
+  final api = MockApi();
 
   @override
   ItemsState get initialState => ItemsInitial();

@@ -44,6 +44,7 @@ class Item extends Equatable {
 
   factory Item.fromJson(Map<String, dynamic> json, orderNumber) {
     final variant = json['variant'];
+    print(variant);
 
     return Item(
         variant['id'],

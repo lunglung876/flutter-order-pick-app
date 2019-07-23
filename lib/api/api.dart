@@ -3,10 +3,11 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:http/http.dart' as http;
+import 'api_interface.dart';
 import 'package:warehouse_order_pick/models/item.dart';
 import 'package:warehouse_order_pick/user_repository.dart';
 
-class Api {
+class Api extends ApiInterface {
   static const host = 'hbx.com';
   static const endpoints = {
     'login': '/login_check',
@@ -15,6 +16,7 @@ class Api {
   };
   final userRepository = new UserRepository();
 
+  @override
   Future<String> login({
     @required String username,
     @required String password,
@@ -32,6 +34,7 @@ class Api {
     return body['jwt_token'];
   }
 
+  @override
   Future<List<Item>> getItems(List<String> orderNumbers) async {
     var items = <Item>[];
     final uri = new Uri.https(
