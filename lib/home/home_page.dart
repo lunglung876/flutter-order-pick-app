@@ -6,6 +6,7 @@ import 'package:warehouse_order_pick/barcode_scanner/barcode_scanner_event.dart'
 import 'package:warehouse_order_pick/orders/orders.dart';
 import 'package:warehouse_order_pick/items/items.dart';
 import 'package:warehouse_order_pick/pick/pick.dart';
+import 'package:warehouse_order_pick/authentication/authentication.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,9 +17,11 @@ class _HomePageState extends State<HomePage> {
   OrdersBloc ordersBloc;
   HomeBarcodeScannerBloc barcodeScannerBloc;
   ItemsBloc itemsBloc;
+  AuthenticationBloc authenticationBloc;
 
   @override
   void initState() {
+    authenticationBloc = BlocProvider.of<AuthenticationBloc>(context);
     ordersBloc = OrdersBloc();
     barcodeScannerBloc = HomeBarcodeScannerBloc(ordersBloc);
     itemsBloc = ItemsBloc();
@@ -60,6 +63,16 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('Home'),
+          actions: <Widget>[
+            RaisedButton(
+              onPressed: () {
+                authenticationBloc.dispatch(LoggedOut());
+              },
+              child: Text('Logout'),
+              textColor: Colors.white,
+              color: Colors.grey,
+            ),
+          ],
         ),
         body: Column(
           children: <Widget>[
